@@ -63,7 +63,6 @@ const Homepage = () => {
             <div className="">
                 <h1 className="my-8 text-2xl text-gray-600">Recent Posts</h1>
                 <PostsList />
-
             </div>
         </div>
     )

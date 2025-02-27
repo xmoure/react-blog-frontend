@@ -4,6 +4,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
+import DOMPurify from "dompurify";
 
 const Comment = ({ comment, postId }) => {
   const { user } = useUser();
@@ -36,14 +37,19 @@ const Comment = ({ comment, postId }) => {
   return (
     <div className="p-4 bg-slate-50 rounded-xl mb-8">
       <div className="flex items-center gap-4">
-        {comment.user?.img && (
-          <Image
+        {comment.user?.img ? (
+          <img
             src={comment.user.img}
             className="w-10 h-10 rounded-full object-cover"
             width={40}
           />
-        )}
-        <span className="font-medium">John Doe</span>
+        ):
+        <Image
+            src="noImage.jpeg"
+            className="w-10 h-10 rounded-full object-cover"
+            width={40}
+          />}
+        <span className="font-medium">{comment.user?.userName}</span>
         <span className="text-sm text-gray-500">
           {format(comment.createdAt)}
         </span>
@@ -56,7 +62,7 @@ const Comment = ({ comment, postId }) => {
           )}
       </div>
       <div className="mt-4">
-        <p>{comment.description}</p>
+        <p>{DOMPurify.sanitize(comment.description)}</p>
       </div>
     </div>
   );

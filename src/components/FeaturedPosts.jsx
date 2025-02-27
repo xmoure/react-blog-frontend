@@ -25,7 +25,7 @@ const FeaturedPosts = () => {
       <div className="w-full lg:w-1/2 flex flex-col gap-4">
         {posts[0].img && (
           <Image
-            src="featured1.jpeg"
+            src={posts[0].img}
             className="rounded-3xl object-cover"
             width={895}
           />
@@ -88,7 +88,7 @@ const FeaturedPosts = () => {
 
             <div className="w-2/3 ">
               <div className="flex items-center gap-4 text-sm lg:text-base mb-4">
-                <h1 className="font-semibold">02.</h1>
+                <h1 className="font-semibold">03.</h1>
                 <Link className="text-blue-800">{posts[2].category}</Link>
                 <span className="text-gray-500 text-sm">
                   {format(posts[2].createdAt)}

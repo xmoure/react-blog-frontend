@@ -3,6 +3,8 @@ import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
+import sanitizeHtml from "sanitize-html";
+import { useState } from "react";
 
 const fetchComments = async (postId) => {
   const response = await axios.get(
@@ -12,13 +14,19 @@ const fetchComments = async (postId) => {
 };
 
 const Comments = ({ postId }) => {
-  const {user} = useUser();
+  const { user } = useUser();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
+  const [comment, setComment] = useState("");
+
   const { isPending, error, data } = useQuery({
     queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
   });
+
+  const handleChange = (e) => {
+    setComment(e.target.value);
+  };
 
   const mutation = useMutation({
     mutationFn: async (newComment) => {
@@ -35,33 +43,54 @@ const Comments = ({ postId }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      setComment("");
     },
     onError: (error) => {
       toast.error(error.response.data);
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = {
-      description: formData.get("description"),
-    };
-    mutation.mutate(data);
+    e.stopPropagation();
+
+    const sanitizedComment = sanitizeHtml(comment, {
+      allowedTags: [],
+      allowedAttributes: {},
+    }).trim();
+
+    if (!sanitizedComment) {
+      toast.warn("Comment cannot be empty.");
+      return;
+    }
+    mutation.mutate({ description: sanitizedComment });
   };
 
   if (isPending) return "Loading...";
-  if (error) return "Something went wrong: " + error.message;
+  if (error)
+    return (
+      <p className="text-red-500">Something went wrong: {error.message}</p>
+    );
 
   return (
-    <div className="flex flex-col gap-8 lg:w-3/5 mb-12">
+    <div className="flex flex-col gap-8 lg:w-4/5 mb-12">
       <h1 className="text-xl text-gray-500 underline">Comments</h1>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
         className="flex items-center justify-between gap-8 w-full"
       >
-        <textarea name="description" placeholder="Write a comment..." className="w-full p-4 rounded-xl" />
-        <button className="bg-blue-800 px-4 py-3 text-white font-medium rounded-xl">
+        <textarea
+          name="description"
+          placeholder="Write a comment..."
+          className="w-full p-4 rounded-xl"
+          value={comment}
+          onChange={handleChange}
+        />
+        <button
+          type="submit"
+          disabled={!comment.trim() || mutation.isPending}
+          className="bg-blue-800 px-4 py-3 text-white font-medium rounded-xl disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
           Send
         </button>
       </form>
@@ -79,14 +108,19 @@ const Comments = ({ postId }) => {
                 user: {
                   img: user.imageUrl,
                   userName: user.username,
-                }
-
+                },
               }}
             />
           )}
-          {data.map((comment) => (
-            <Comment key={comment._id} comment={comment} postId={postId}/>
-          ))}
+          {data.length === 0 ? (
+            <p className="text-gray-500">
+              No comments yet. Be the first to comment!
+            </p>
+          ) : (
+            data.map((comment) => (
+              <Comment key={comment._id} comment={comment} postId={postId} />
+            ))
+          )}
         </>
       )}
     </div>

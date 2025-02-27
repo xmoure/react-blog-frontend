@@ -9,7 +9,7 @@ const MainCategories = () => {
                 <Link to="/posts" className="bg-blue-800 text-white rounded-full py-2 px-4">All posts</Link>
                 <Link to="/posts?cat=web-design" className="hover:bg-blue-50 rounded-full py-2 px-4">Web Design</Link>
                 <Link to="/posts?cat=development" className="hover:bg-blue-50 rounded-full py-2 px-4">Development</Link>
-                <Link to="/posts?cat=search-engines" className="hover:bg-blue-50 rounded-full py-2 px-4">Search Engines</Link>
+                <Link to="/posts?cat=search-engine" className="hover:bg-blue-50 rounded-full py-2 px-4">Search Engines</Link>
                 <Link to="/posts?cat=marketing" className="hover:bg-blue-50 rounded-full py-2 px-4">Marketing</Link>
             </div>
             <span className="text-xl font-medium">|</span>
