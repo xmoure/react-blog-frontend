@@ -14,14 +14,14 @@ const fetchPosts = async (pageParam, searchParams) => {
 
 const PostsList = () => {
   const [searchParams] = useSearchParams();
-  const { data, fetchNextPage, hasNextPage, status, isFetching } = useInfiniteQuery({
-    queryKey: ["posts", searchParams?.toString()],
-    queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, searchParams),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, pages) =>
-      lastPage.hasMore ? pages.length + 1 : undefined,
-  });
-
+  const { data, fetchNextPage, hasNextPage, status, isFetching } =
+    useInfiniteQuery({
+      queryKey: ["posts", searchParams?.toString()],
+      queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, searchParams),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.hasMore ? pages.length + 1 : undefined,
+    });
 
   if (status === "loading") {
     return (
@@ -43,7 +43,7 @@ const PostsList = () => {
 
   const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
-  if ( status === "success" && allPosts.length === 0) {
+  if (status === "success" && allPosts.length === 0) {
     return (
       <div className="flex-1 flex justify-center items-center h-64">
         <p className="text-bold text-2xl text-center">
@@ -60,9 +60,11 @@ const PostsList = () => {
       hasMore={!!hasNextPage}
       loader={isFetching ? <h4>Loading more posts ...</h4> : null}
       endMessage={
-        <p>
-          <b>All posts loaded!</b>
-        </p>
+        allPosts.length > 0 ? (
+          <p>
+            <b>All posts loaded!</b>
+          </p>
+        ) : null
       }
     >
       {allPosts.map((post) => (
