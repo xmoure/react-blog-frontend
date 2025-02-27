@@ -27,7 +27,7 @@ const PostsList = () => {
 
   const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
-  if (allPosts.length === 0) {
+  if ( status === "success" && allPosts.length === 0) {
     return (
       <div className="flex-1 flex justify-center items-center h-64">
         <p className="text-bold text-2xl text-center">
