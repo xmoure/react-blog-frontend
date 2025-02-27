@@ -4,28 +4,27 @@ import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { format } from "timeago.js";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-
-const fetchPost = async (slug) => {
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/posts/${slug}`
-  );
-  return response.data;
-};
+import { fetchPost } from "../utils/fetchPosts";
 
 const SinglePostPage = () => {
   const { slug } = useParams();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["post", slug],
     queryFn: () => fetchPost(slug),
   });
+
   if (isPending) return "Loading...";
+
   if (error) return "Something went wrong: " + error.message;
+
   if (!data) return "Post not found!";
+
   const safeHTML = DOMPurify.sanitize(marked(data.content));
+
   return (
     <div className="flex flex-col gap-8">
       {/* detail */}

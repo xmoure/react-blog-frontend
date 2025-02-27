@@ -5,13 +5,8 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
 import sanitizeHtml from "sanitize-html";
 import { useState } from "react";
+import { fetchComments } from "../utils/fetchComments";
 
-const fetchComments = async (postId) => {
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/comments/${postId}`
-  );
-  return response.data;
-};
 
 const Comments = ({ postId }) => {
   const { user } = useUser();

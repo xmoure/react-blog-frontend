@@ -1,20 +1,14 @@
 import { Link } from "react-router-dom";
 import Image from "./Image";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "timeago.js";
+import { fetchFeaturedPosts } from "../utils/fetchPosts";
 
-const fetchPosts = async () => {
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/posts?featured=true&limit=4&sort=newest`
-  );
-  return response.data;
-};
 
 const FeaturedPosts = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["featuresPosts"],
-    queryFn: () => fetchPosts(),
+    queryFn: () => fetchFeaturedPosts(),
   });
   if (isPending) return "Loading...";
   if (error) return "Something went wrong: " + error.message;
