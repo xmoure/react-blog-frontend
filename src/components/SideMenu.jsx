@@ -1,26 +1,29 @@
 import { useSearchParams } from "react-router-dom";
 import Search from "./Search";
+import { useCallback } from "react"
 
 const SideMenu = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = useCallback(
+    (e) => {
     if (searchParams.get("sort") !== e.target.value) {
       setSearchParams({
         ...Object.fromEntries(searchParams.entries()),
         sort: e.target.value,
       });
     }
-  };
+  }, [searchParams, setSearchParams]);
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = useCallback(
+    (category) => {
     if (searchParams.get("cat") !== category) {
       setSearchParams({
         ...Object.fromEntries(searchParams.entries()),
         cat: category,
       });
     }
-  };
+  }, [searchParams, setSearchParams]);
 
   return (
     <div className="px-4 h-max sticky top-8">

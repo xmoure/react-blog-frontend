@@ -3,6 +3,7 @@ import PostItem from "./PostItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSearchParams } from "react-router-dom";
 import { fetchPosts } from "../utils/fetchPosts";
+import { useMemo } from "react";
 
 
 const PostsList = () => {
@@ -15,6 +16,11 @@ const PostsList = () => {
       getNextPageParam: (lastPage, pages) =>
         lastPage.hasMore ? pages.length + 1 : undefined,
     });
+
+  const allPosts = useMemo(
+    () => data?.pages?.flatMap((page) => page.posts) || [],
+    [data?.pages]
+  );
 
   if (status === "loading") {
     return (
@@ -33,8 +39,6 @@ const PostsList = () => {
       </div>
     );
   }
-
-  const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
   if (status === "success" && allPosts.length === 0) {
     return (

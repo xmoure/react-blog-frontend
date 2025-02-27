@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 const Search = () => {
@@ -5,7 +6,8 @@ const Search = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = useCallback(
+    (e) => {
     if (e.key === "Enter") {
       const query = e.target.value;
       if (location.pathname === "/posts") {
@@ -14,7 +16,8 @@ const Search = () => {
         navigate(`/posts?search=${query}`);
       }
     }
-  };
+  }, [location.pathname, navigate, searchParams, setSearchParams]);
+
   return (
     <div className="bg-gray-100 p-2 rounded-full flex items-center gap-2">
       <svg

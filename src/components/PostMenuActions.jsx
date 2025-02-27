@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useCallback, useMemo } from "react";
 
 const PostMenuActions = ({ post }) => {
   const { user } = useUser();
@@ -95,22 +96,25 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
-  const isSaved = savedPosts?.data.some((p) => p === post._id || false);
+  const isSaved = useMemo(
+    () => savedPosts?.data.some((p) => p === post._id || false),
+    [savedPosts, post._id]
+  );
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     deleteMutation.mutate();
-  };
+  }, [deleteMutation]);
 
-  const handleFeature = () => {
+  const handleFeature = useCallback(() => {
     featureMutation.mutate();
-  };
+  }, [featureMutation]);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (!user) {
       return navigate("/login");
     }
     saveMutation.mutate();
-  };
+  }, [user, navigate, saveMutation]);
 
   return (
     <div className="">
