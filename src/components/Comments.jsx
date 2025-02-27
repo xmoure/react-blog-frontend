@@ -101,8 +101,8 @@ const Comments = ({ postId }) => {
                 description: `${mutation.variables.description} (Sending...)`,
                 createdAt: new Date(),
                 user: {
-                  img: user.imageUrl,
-                  userName: user.username,
+                  img: user?.imageUrl,
+                  userName: user?.username,
                 },
               }}
             />

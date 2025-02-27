@@ -16,10 +16,10 @@ const Homepage = () => {
             <div className="flex items-center justify-between">
                 <div className="">
                     <h1 className="text-gray-800 text-2xl md:text-5xl lg:text-6xl font-bold">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Welcome to The Blog.
                     </h1>
                     <p className="mt-8 text-md md:text-xl">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis efficitur nulla non elementum consequat. Donec accumsan, mi volutpat elementum placerat, dui neque sagittis est, ornare vestibulum sapien purus id urna. Quisque fringilla maximus magna at viverra.
+                        Register in order to start writing
                     </p>
                 </div>
                 <Link to="write" className="hidden md:block relative">

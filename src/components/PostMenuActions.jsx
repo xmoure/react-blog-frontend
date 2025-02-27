@@ -19,6 +19,7 @@ const PostMenuActions = ({ post }) => {
   } = useQuery({
     queryKey: ["savedPosts"],
     queryFn: async () => {
+      if (!user) return { data: [] };
       const token = await getToken();
       return axios.get(`${import.meta.env.VITE_API_URL}/users/saved`, {
         headers: {
@@ -26,6 +27,7 @@ const PostMenuActions = ({ post }) => {
         },
       });
     },
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
@@ -101,27 +103,27 @@ const PostMenuActions = ({ post }) => {
     [savedPosts, post._id]
   );
 
-  const handleDelete = useCallback(() => {
+  const handleDelete =() => {
     deleteMutation.mutate();
-  }, [deleteMutation]);
+  };
 
-  const handleFeature = useCallback(() => {
+  const handleFeature =() => {
     featureMutation.mutate();
-  }, [featureMutation]);
+  };
 
-  const handleSave = useCallback(() => {
+  const handleSave =() => {
     if (!user) {
       return navigate("/login");
     }
     saveMutation.mutate();
-  }, [user, navigate, saveMutation]);
+  };
 
   return (
     <div className="">
       <h1 className="mt-8 mb-4 text-sm font-medium">Actions</h1>
-      {isPending ? (
+      {user && isPending ? (
         "Loading ..."
-      ) : error ? (
+      ) : user && error ? (
         "Error saving the post. Please try again"
       ) : (
         <div

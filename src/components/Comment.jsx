@@ -13,6 +13,7 @@ const Comment = ({ comment, postId }) => {
 
   const queryClient = useQueryClient();
 
+
   const mutation = useMutation({
       mutationFn: async () => {
         const token = await getToken();
